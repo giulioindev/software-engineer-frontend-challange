@@ -1,0 +1,9 @@
+version: "3.9"
+services:
+  mockoon:
+    image: mockoon/cli:9.3.0
+    command: ["--data", "/data/mock-api.json", "--port", "3000"]
+    volumes:
+      - ./mockoon:/data
+    ports:
+      - "3000:3000"

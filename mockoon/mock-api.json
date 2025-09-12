@@ -1,0 +1,93 @@
+{
+  "uuid": "9c9f8e2d-0a6b-4b7d-9a4b-2b1f5f203001",
+  "lastMigration": 19,
+  "name": "Invoice Management Mock API",
+  "hostname": "0.0.0.0",
+  "port": 3000,
+  "endpointPrefix": "api",
+  "latency": 50,
+  "routes": [
+    {
+      "uuid": "e1c7a2d1-1111-4e22-aaaa-bb11cc22dd33",
+      "method": "get",
+      "endpoint": "invoices",
+      "enabled": true,
+      "responses": [
+        {
+          "uuid": "c8d3b2f1-aaaa-4d22-bbbb-cc33dd44ee55",
+          "label": "List invoices",
+          "statusCode": 200,
+          "headers": [
+            { "key": "Content-Type", "value": "application/json" }
+          ],
+          "body": "{\"page\":{{#if (queryParam 'page')}}{{queryParam 'page'}}{{else}}1{{/if}},\"totalPages\":2,\"items\":[{\"id\":\"1\",\"title\":\"Website redesign\",\"customer\":\"Acme Corp\",\"amount\":1500.50,\"status\":\"draft\",\"date\":\"2025-09-01\"},{\"id\":\"2\",\"title\":\"Consulting services\",\"customer\":\"Beta Ltd\",\"amount\":800.00,\"status\":\"sent\",\"date\":\"2025-09-03\"},{\"id\":\"3\",\"title\":\"Maintenance contract\",\"customer\":\"Gamma Inc\",\"amount\":1200.00,\"status\":\"paid\",\"date\":\"2025-09-05\"}]}"
+        }
+      ]
+    },
+    {
+      "uuid": "a2b4c6d8-2222-4e33-bbbb-ee44ff55aa66",
+      "method": "post",
+      "endpoint": "invoices",
+      "enabled": true,
+      "responses": [
+        {
+          "uuid": "f1e2d3c4-bbbb-4f44-cccc-dd55ee66ff77",
+          "label": "Create invoice",
+          "statusCode": 201,
+          "headers": [
+            { "key": "Content-Type", "value": "application/json" }
+          ],
+          "body": "{\"id\":\"{{faker 'string.uuid'}}\",\"title\":\"{{body 'title'}}\",\"customer\":\"{{body 'customer'}}\",\"amount\":{{body 'amount'}},\"status\":\"{{#if (body 'status')}}{{body 'status'}}{{else}}draft{{/if}}\",\"date\":\"{{now 'YYYY-MM-DD'}}\"}"
+        }
+      ]
+    },
+    {
+      "uuid": "b3c5d7e9-3333-4f44-cccc-ff66aa77bb88",
+      "method": "get",
+      "endpoint": "invoices/:id",
+      "enabled": true,
+      "responses": [
+        {
+          "uuid": "d4e5f6a7-cccc-4055-dddd-aa77bb88cc99",
+          "label": "Get invoice by id",
+          "statusCode": 200,
+          "headers": [
+            { "key": "Content-Type", "value": "application/json" }
+          ],
+          "body": "{\"id\":\"{{param 'id'}}\",\"title\":\"Website redesign\",\"customer\":\"Acme Corp\",\"amount\":1500.50,\"status\":\"draft\",\"date\":\"2025-09-01\"}"
+        }
+      ]
+    },
+    {
+      "uuid": "c4d6e8f0-4444-5055-dddd-aa88bb99cc00",
+      "method": "put",
+      "endpoint": "invoices/:id",
+      "enabled": true,
+      "responses": [
+        {
+          "uuid": "e5f6a7b8-dddd-5166-eeee-bb99cc00dd11",
+          "label": "Update invoice",
+          "statusCode": 200,
+          "headers": [
+            { "key": "Content-Type", "value": "application/json" }
+          ],
+          "body": "{\"id\":\"{{param 'id'}}\",\"title\":\"{{body 'title'}}\",\"customer\":\"{{body 'customer'}}\",\"amount\":{{body 'amount'}},\"status\":\"{{body 'status'}}\",\"date\":\"{{now 'YYYY-MM-DD'}}\"}"
+        }
+      ]
+    },
+    {
+      "uuid": "d5e7f901-5555-5266-eeee-bb00cc11dd22",
+      "method": "delete",
+      "endpoint": "invoices/:id",
+      "enabled": true,
+      "responses": [
+        {
+          "uuid": "f6a7b8c9-eeee-5377-ffff-cc11dd22ee33",
+          "label": "Delete invoice",
+          "statusCode": 204,
+          "headers": []
+        }
+      ]
+    }
+  ]
+}

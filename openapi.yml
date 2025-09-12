@@ -1,0 +1,142 @@
+openapi: 3.0.3
+info:
+  title: Invoice Management API (Mock)
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:3000/api
+
+paths:
+  /invoices:
+    get:
+      summary: List invoices
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+          description: Page number
+        - in: query
+          name: status
+          schema:
+            type: string
+            enum: [draft, sent, paid]
+          description: Filter by status
+      responses:
+        "200":
+          description: A paginated list of invoices
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaginatedInvoices"
+    post:
+      summary: Create invoice
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InvoiceInput"
+      responses:
+        "201":
+          description: Invoice created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Invoice"
+
+  /invoices/{id}:
+    get:
+      summary: Get invoice by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Invoice details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Invoice"
+    put:
+      summary: Update invoice
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InvoiceInput"
+      responses:
+        "200":
+          description: Updated invoice
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Invoice"
+    delete:
+      summary: Delete invoice
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Invoice deleted
+
+components:
+  schemas:
+    Invoice:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        customer:
+          type: string
+        amount:
+          type: number
+        status:
+          type: string
+          enum: [draft, sent, paid]
+        date:
+          type: string
+          format: date
+    InvoiceInput:
+      type: object
+      required:
+        - title
+        - customer
+        - amount
+      properties:
+        title:
+          type: string
+        customer:
+          type: string
+        amount:
+          type: number
+        status:
+          type: string
+          enum: [draft, sent, paid]
+    PaginatedInvoices:
+      type: object
+      properties:
+        page:
+          type: integer
+        totalPages:
+          type: integer
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/Invoice"
