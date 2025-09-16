@@ -7,6 +7,8 @@ You must build a frontend application (choose between React or Flutter) that int
 
 The backend is not real: it is mocked with Mockoon and runs locally via Docker.
 
+If you encounter any issues or need troubleshooting assistance, please contact `maglie@multicerta.it`.
+
 ## Scoring Criteria
 
 Each feature and best practice contributes to a total score of 110 base points (+15 bonus possible), allowing candidates to self-evaluate their implementation.
