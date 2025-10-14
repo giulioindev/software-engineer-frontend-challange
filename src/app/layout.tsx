@@ -1,0 +1,66 @@
+import { Container } from "@mui/material";
+import CssBaseline from "@mui/material/CssBaseline";
+import InitColorSchemeScript from "@mui/material/InitColorSchemeScript";
+import { ThemeProvider } from "@mui/material/styles";
+import { AppRouterCacheProvider } from "@mui/material-nextjs/v15-appRouter";
+import type { Metadata } from "next";
+import { Geist, Geist_Mono, Roboto } from "next/font/google";
+import Navigation from "@/app/_components/navigation";
+import theme from "@/theme";
+
+const roboto = Roboto({
+  weight: ["300", "400", "500", "700"],
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-roboto",
+});
+
+const geistSans = Geist({
+  variable: "--font-geist-sans",
+  subsets: ["latin"],
+});
+
+const geistMono = Geist_Mono({
+  variable: "--font-geist-mono",
+  subsets: ["latin"],
+});
+
+export const metadata: Metadata = {
+  title: "Invoice Management System",
+  description: "A comprehensive invoice management application",
+};
+
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <html
+      lang="en"
+      className={`${roboto.variable} ${geistSans.variable} ${geistMono.variable}`}
+      suppressHydrationWarning
+    >
+      <body>
+        <AppRouterCacheProvider>
+          <ThemeProvider theme={theme}>
+            <CssBaseline />
+            <InitColorSchemeScript attribute="class" />
+            <main>
+              <Navigation />
+              <Container
+                maxWidth="lg"
+                sx={{
+                  py: { xs: 2, sm: 3, md: 4 },
+                  px: { xs: 2, sm: 3, md: 3 },
+                }}
+              >
+                {children}
+              </Container>
+            </main>
+          </ThemeProvider>
+        </AppRouterCacheProvider>
+      </body>
+    </html>
+  );
+}
