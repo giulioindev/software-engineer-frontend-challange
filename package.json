@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
+    "dev": "next dev --turbopack --port 3001",
     "build": "next build --turbopack",
     "start": "next start",
     "lint": "biome check",
@@ -17,6 +17,7 @@
     "@mui/material": "^7.3.4",
     "@mui/material-nextjs": "^7.3.3",
     "@reduxjs/toolkit": "^2.9.0",
+    "axios": "^1.12.2",
     "next": "15.5.4",
     "react": "19.1.0",
     "react-dom": "19.1.0",
