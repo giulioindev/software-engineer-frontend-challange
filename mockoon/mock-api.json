@@ -18,7 +18,16 @@
           "label": "List invoices",
           "statusCode": 200,
           "headers": [
-            { "key": "Content-Type", "value": "application/json" }
+            { "key": "Content-Type", "value": "application/json" },
+            { "key": "Access-Control-Allow-Origin", "value": "*" },
+            {
+              "key": "Access-Control-Allow-Methods",
+              "value": "GET, POST, PUT, DELETE, OPTIONS"
+            },
+            {
+              "key": "Access-Control-Allow-Headers",
+              "value": "Content-Type, Authorization"
+            }
           ],
           "body": "{\"page\":{{#if (queryParam 'page')}}{{queryParam 'page'}}{{else}}1{{/if}},\"totalPages\":2,\"items\":[{\"id\":\"1\",\"title\":\"Website redesign\",\"customer\":\"Acme Corp\",\"amount\":1500.50,\"status\":\"draft\",\"date\":\"2025-09-01\"},{\"id\":\"2\",\"title\":\"Consulting services\",\"customer\":\"Beta Ltd\",\"amount\":800.00,\"status\":\"sent\",\"date\":\"2025-09-03\"},{\"id\":\"3\",\"title\":\"Maintenance contract\",\"customer\":\"Gamma Inc\",\"amount\":1200.00,\"status\":\"paid\",\"date\":\"2025-09-05\"}]}"
         }
@@ -35,7 +44,16 @@
           "label": "Create invoice",
           "statusCode": 201,
           "headers": [
-            { "key": "Content-Type", "value": "application/json" }
+            { "key": "Content-Type", "value": "application/json" },
+            { "key": "Access-Control-Allow-Origin", "value": "*" },
+            {
+              "key": "Access-Control-Allow-Methods",
+              "value": "GET, POST, PUT, DELETE, OPTIONS"
+            },
+            {
+              "key": "Access-Control-Allow-Headers",
+              "value": "Content-Type, Authorization"
+            }
           ],
           "body": "{\"id\":\"{{faker 'string.uuid'}}\",\"title\":\"{{body 'title'}}\",\"customer\":\"{{body 'customer'}}\",\"amount\":{{body 'amount'}},\"status\":\"{{#if (body 'status')}}{{body 'status'}}{{else}}draft{{/if}}\",\"date\":\"{{now 'YYYY-MM-DD'}}\"}"
         }
@@ -52,7 +70,16 @@
           "label": "Get invoice by id",
           "statusCode": 200,
           "headers": [
-            { "key": "Content-Type", "value": "application/json" }
+            { "key": "Content-Type", "value": "application/json" },
+            { "key": "Access-Control-Allow-Origin", "value": "*" },
+            {
+              "key": "Access-Control-Allow-Methods",
+              "value": "GET, POST, PUT, DELETE, OPTIONS"
+            },
+            {
+              "key": "Access-Control-Allow-Headers",
+              "value": "Content-Type, Authorization"
+            }
           ],
           "body": "{\"id\":\"{{param 'id'}}\",\"title\":\"Website redesign\",\"customer\":\"Acme Corp\",\"amount\":1500.50,\"status\":\"draft\",\"date\":\"2025-09-01\"}"
         }
@@ -69,7 +96,16 @@
           "label": "Update invoice",
           "statusCode": 200,
           "headers": [
-            { "key": "Content-Type", "value": "application/json" }
+            { "key": "Content-Type", "value": "application/json" },
+            { "key": "Access-Control-Allow-Origin", "value": "*" },
+            {
+              "key": "Access-Control-Allow-Methods",
+              "value": "GET, POST, PUT, DELETE, OPTIONS"
+            },
+            {
+              "key": "Access-Control-Allow-Headers",
+              "value": "Content-Type, Authorization"
+            }
           ],
           "body": "{\"id\":\"{{param 'id'}}\",\"title\":\"{{body 'title'}}\",\"customer\":\"{{body 'customer'}}\",\"amount\":{{body 'amount'}},\"status\":\"{{body 'status'}}\",\"date\":\"{{now 'YYYY-MM-DD'}}\"}"
         }
@@ -85,7 +121,67 @@
           "uuid": "f6a7b8c9-eeee-5377-ffff-cc11dd22ee33",
           "label": "Delete invoice",
           "statusCode": 204,
-          "headers": []
+          "headers": [
+            { "key": "Access-Control-Allow-Origin", "value": "*" },
+            {
+              "key": "Access-Control-Allow-Methods",
+              "value": "GET, POST, PUT, DELETE, OPTIONS"
+            },
+            {
+              "key": "Access-Control-Allow-Headers",
+              "value": "Content-Type, Authorization"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "uuid": "e6f8a0b2-6666-5377-ffff-cc22dd33ee44",
+      "method": "options",
+      "endpoint": "invoices",
+      "enabled": true,
+      "responses": [
+        {
+          "uuid": "g7a8b9c0-ffff-5488-aaaa-dd33ee44ff55",
+          "label": "OPTIONS invoices",
+          "statusCode": 200,
+          "headers": [
+            { "key": "Access-Control-Allow-Origin", "value": "*" },
+            {
+              "key": "Access-Control-Allow-Methods",
+              "value": "GET, POST, PUT, DELETE, OPTIONS"
+            },
+            {
+              "key": "Access-Control-Allow-Headers",
+              "value": "Content-Type, Authorization"
+            }
+          ],
+          "body": ""
+        }
+      ]
+    },
+    {
+      "uuid": "f7a9b1c3-7777-5488-aaaa-dd44ee55ff66",
+      "method": "options",
+      "endpoint": "invoices/:id",
+      "enabled": true,
+      "responses": [
+        {
+          "uuid": "h8b9c0d1-aaaa-5599-bbbb-ee55ff66aa77",
+          "label": "OPTIONS invoices/:id",
+          "statusCode": 200,
+          "headers": [
+            { "key": "Access-Control-Allow-Origin", "value": "*" },
+            {
+              "key": "Access-Control-Allow-Methods",
+              "value": "GET, POST, PUT, DELETE, OPTIONS"
+            },
+            {
+              "key": "Access-Control-Allow-Headers",
+              "value": "Content-Type, Authorization"
+            }
+          ],
+          "body": ""
         }
       ]
     }
