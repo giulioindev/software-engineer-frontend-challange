@@ -12,7 +12,7 @@ import Typography from "@mui/material/Typography";
 import Link from "next/link";
 import { Fragment } from "react";
 import type { DashboardStats } from "@/features/dashboard/types/dashboard-stats";
-import { formatCurrency, getStatusColor } from "@/features/dashboard/utils";
+import { formatCurrency, getStatusColor } from "@/utils";
 import { StatusIcon } from "./status-icon";
 
 export default function RecentInvoices({

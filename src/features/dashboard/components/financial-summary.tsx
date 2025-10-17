@@ -4,7 +4,7 @@ import CardContent from "@mui/material/CardContent";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import type { DashboardStats } from "@/features/dashboard/types/dashboard-stats";
-import { formatCurrency } from "@/features/dashboard/utils";
+import { formatCurrency } from "@/utils";
 
 export default function FinancialSummary({
   stats,

@@ -1,4 +1,4 @@
-import type { InvoiceStatus } from "../invoices/types/invoice-status";
+import type { InvoiceStatus } from "@/features/invoices/types/invoice-status";
 
 const formatCurrency = (amount: number): string => {
   return new Intl.NumberFormat("en-US", {
@@ -20,4 +20,8 @@ const getStatusColor = (status: InvoiceStatus) => {
   }
 };
 
-export { formatCurrency, getStatusColor };
+const formatDate = (dateString: string) => {
+  return new Date(dateString).toLocaleDateString();
+};
+
+export { formatCurrency, getStatusColor, formatDate };

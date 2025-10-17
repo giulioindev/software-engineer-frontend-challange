@@ -1,6 +1,7 @@
 "use client";
 
 import { Alert, Box, CircularProgress, Grid, Typography } from "@mui/material";
+import Spinner from "@/components/spinner";
 import FinancialSummary from "@/features/dashboard/components/financial-summary";
 import Metrics from "@/features/dashboard/components/metrics";
 import RecentInvoices from "@/features/dashboard/components/recent-invoices";
@@ -11,16 +12,7 @@ export default function DashboardPage() {
   const { stats, isLoading, isError } = useStats();
 
   if (isLoading) {
-    return (
-      <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        minHeight="400px"
-      >
-        <CircularProgress />
-      </Box>
-    );
+    return <Spinner />;
   }
 
   if (isError) {

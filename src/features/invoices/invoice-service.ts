@@ -1,5 +1,6 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import type { Invoice } from "@/features/invoices/types/invoice";
+import type { InvoiceFilters } from "@/features/invoices/types/invoice-filters";
 import type { AxiosBaseQueryParams } from "@/lib/axios-base-query";
 import axiosBaseQuery from "@/lib/axios-base-query";
 import type { PaginatedData } from "@/types/paginated-data";
@@ -11,14 +12,14 @@ export const invoiceApi = createApi({
   }),
   tagTypes: ["Invoices"],
   endpoints: (builder) => ({
-    getInvoices: builder.query<PaginatedData<Invoice>, number | void>({
-      query: (page = 1) =>
+    getInvoices: builder.query<PaginatedData<Invoice>, InvoiceFilters | void>({
+      query: ({ page = 1, status }: InvoiceFilters) =>
         ({
           url: "/invoices",
           method: "GET",
-          params: { page },
+          params: { page, status },
         }) as AxiosBaseQueryParams,
-      providesTags: (result, error, page) =>
+      providesTags: (result, _error, _page) =>
         result
           ? [
               ...result.items.map(({ id }) => ({
@@ -29,7 +30,18 @@ export const invoiceApi = createApi({
             ]
           : [{ type: "Invoices", id: "PARTIAL-LIST" }],
     }),
+    deleteInvoice: builder.mutation<void, string>({
+      query: (id) =>
+        ({
+          url: `/invoices/${id}`,
+          method: "DELETE",
+        }) as AxiosBaseQueryParams,
+      invalidatesTags: (_result, _error, id) => [
+        { type: "Invoices", id },
+        { type: "Invoices", id: "PARTIAL-LIST" },
+      ],
+    }),
   }),
 });
 
-export const { useGetInvoicesQuery } = invoiceApi;
+export const { useGetInvoicesQuery, useDeleteInvoiceMutation } = invoiceApi;

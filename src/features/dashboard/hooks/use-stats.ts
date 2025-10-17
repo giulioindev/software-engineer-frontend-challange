@@ -4,7 +4,12 @@ import { useGetInvoicesQuery } from "@/features/invoices/invoice-service";
 import type { Invoice } from "@/features/invoices/types/invoice";
 
 export const useStats = () => {
-  const { data: invoices, isLoading, isError, error } = useGetInvoicesQuery(1);
+  const {
+    data: invoices,
+    isLoading,
+    isError,
+    error,
+  } = useGetInvoicesQuery({ page: 1 });
   const [stats, setStats] = useState<DashboardStats>({
     totalInvoices: 0,
     totalRevenue: 0,
