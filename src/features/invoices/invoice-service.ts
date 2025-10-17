@@ -1,7 +1,7 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
+import type { Invoice } from "@/features/invoices/types/invoice";
 import type { AxiosBaseQueryParams } from "@/lib/axios-base-query";
 import axiosBaseQuery from "@/lib/axios-base-query";
-import type { Invoice } from "@/types/invoice";
 import type { PaginatedData } from "@/types/paginated-data";
 
 export const invoiceApi = createApi({

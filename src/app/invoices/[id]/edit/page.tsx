@@ -3,9 +3,12 @@
 import { Alert, Box, CircularProgress } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { use, useEffect, useState } from "react";
-import InvoiceForm from "@/app/invoices/_components/invoice-form";
+import InvoiceForm from "@/features/invoices/components/invoice-form";
+import type {
+  Invoice,
+  UpdateInvoiceData,
+} from "@/features/invoices/types/invoice";
 import { invoiceService } from "@/services/invoiceService";
-import type { Invoice, UpdateInvoiceData } from "@/types/invoice";
 
 interface EditInvoicePageProps {
   params: Promise<{

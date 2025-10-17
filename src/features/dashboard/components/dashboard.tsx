@@ -21,117 +21,15 @@ import {
   Typography,
 } from "@mui/material";
 import Link from "next/link";
-import { Fragment, useEffect, useState } from "react";
-import { invoiceService } from "@/services/invoiceService";
-import type { Invoice } from "@/types/invoice";
-
-interface DashboardStats {
-  totalInvoices: number;
-  totalRevenue: number;
-  paidInvoices: number;
-  pendingInvoices: number;
-  draftInvoices: number;
-  averageInvoiceValue: number;
-  recentInvoices: Invoice[];
-}
+import { Fragment } from "react";
+import StatusIcon from "@/features/dashboard/components/status-icon";
+import { useStats } from "@/features/dashboard/hooks/use-stats";
+import { formatCurrency, getStatusColor } from "@/features/dashboard/utils";
 
 export default function Dashboard() {
-  const [stats, setStats] = useState<DashboardStats | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const { stats, isLoading, isError } = useStats();
 
-  useEffect(() => {
-    loadDashboardData();
-  }, []);
-
-  const loadDashboardData = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-
-      // Get all invoices for dashboard calculations
-      const result = await invoiceService.getInvoices(
-        {},
-        { page: 1, limit: 1000 },
-      );
-      const invoices = result.invoices;
-
-      // Calculate statistics
-      const totalInvoices = invoices.length;
-      const totalRevenue = invoices
-        .filter((invoice) => invoice.status === "paid")
-        .reduce((sum, invoice) => sum + invoice.amount, 0);
-
-      const paidInvoices = invoices.filter(
-        (invoice) => invoice.status === "paid",
-      ).length;
-      const pendingInvoices = invoices.filter(
-        (invoice) => invoice.status === "sent",
-      ).length;
-      const draftInvoices = invoices.filter(
-        (invoice) => invoice.status === "draft",
-      ).length;
-
-      const averageInvoiceValue =
-        totalInvoices > 0 ? totalRevenue / paidInvoices : 0;
-
-      // Get recent invoices (last 5)
-      const sortedInvoices = [...invoices].sort(
-        (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
-      );
-      const recentInvoices = sortedInvoices.slice(0, 5);
-
-      setStats({
-        totalInvoices,
-        totalRevenue,
-        paidInvoices,
-        pendingInvoices,
-        draftInvoices,
-        averageInvoiceValue,
-        recentInvoices,
-      });
-    } catch (err) {
-      setError("Failed to load dashboard data");
-      console.error("Error loading dashboard:", err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
-    }).format(amount);
-  };
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "paid":
-        return "success";
-      case "sent":
-        return "warning";
-      case "draft":
-        return "primary";
-      default:
-        return "primary";
-    }
-  };
-
-  const getStatusIcon = (status: string) => {
-    switch (status) {
-      case "paid":
-        return <CheckCircleIcon />;
-      case "sent":
-        return <SendIcon />;
-      case "draft":
-        return <EditIcon />;
-      default:
-        return <ReceiptIcon />;
-    }
-  };
-
-  if (loading) {
+  if (isLoading) {
     return (
       <Box
         display="flex"
@@ -144,10 +42,10 @@ export default function Dashboard() {
     );
   }
 
-  if (error) {
+  if (isError) {
     return (
-      <Alert severity="error" onClose={() => setError(null)}>
-        {error}
+      <Alert severity="error" onClose={() => {}}>
+        {"Failed to load dashboard data"}
       </Alert>
     );
   }
@@ -408,11 +306,11 @@ export default function Dashboard() {
                     <Fragment key={invoice.id}>
                       <ListItem>
                         <ListItemIcon>
-                          {getStatusIcon(invoice.status)}
+                          <StatusIcon status={invoice.status} />
                         </ListItemIcon>
                         <ListItemText
                           primary={invoice.title}
-                          secondary={`${invoice.customerName} • ${formatCurrency(invoice.amount)}`}
+                          secondary={`${invoice.customer} • ${formatCurrency(invoice.amount)}`}
                         />
                         <Chip
                           label={invoice.status}

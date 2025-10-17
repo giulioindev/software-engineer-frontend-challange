@@ -1,10 +1,10 @@
-export type InvoiceStatus = 'draft' | 'sent' | 'paid';
+export type InvoiceStatus = "draft" | "sent" | "paid";
 
 export interface Invoice {
   id: string;
   title: string;
   amount: number;
-  customerName: string;
+  customer: string;
   date: string;
   status: InvoiceStatus;
 }
@@ -18,7 +18,7 @@ export interface CreateInvoiceData {
 export interface UpdateInvoiceData {
   title?: string;
   amount?: number;
-  customerName?: string;
+  customer?: string;
   status?: InvoiceStatus;
 }
 

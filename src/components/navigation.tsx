@@ -23,7 +23,7 @@ import {
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
-import ModeSwitch from "@/app/_components/mode-switch";
+import ModeSwitch from "@/components/mode-switch";
 
 export default function Navigation() {
   const pathname = usePathname();

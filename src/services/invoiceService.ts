@@ -4,7 +4,7 @@ import type {
   InvoiceFilters,
   PaginationParams,
   UpdateInvoiceData,
-} from "@/types/invoice";
+} from "@/features/invoices/types/invoice";
 
 // Mock data for development
 const mockInvoices: Invoice[] = [
@@ -12,7 +12,7 @@ const mockInvoices: Invoice[] = [
     id: "1",
     title: "Website Development",
     amount: 2500.0,
-    customerName: "Acme Corp",
+    customer: "Acme Corp",
     date: "2024-01-15",
     status: "paid",
   },
@@ -20,7 +20,7 @@ const mockInvoices: Invoice[] = [
     id: "2",
     title: "Logo Design",
     amount: 500.0,
-    customerName: "TechStart Inc",
+    customer: "TechStart Inc",
     date: "2024-01-20",
     status: "sent",
   },
@@ -28,7 +28,7 @@ const mockInvoices: Invoice[] = [
     id: "3",
     title: "Consulting Services",
     amount: 1200.0,
-    customerName: "Global Solutions",
+    customer: "Global Solutions",
     date: "2024-01-25",
     status: "draft",
   },
@@ -36,7 +36,7 @@ const mockInvoices: Invoice[] = [
     id: "4",
     title: "Mobile App Development",
     amount: 5000.0,
-    customerName: "Innovation Labs",
+    customer: "Innovation Labs",
     date: "2024-02-01",
     status: "paid",
   },
@@ -44,7 +44,7 @@ const mockInvoices: Invoice[] = [
     id: "5",
     title: "UI/UX Design",
     amount: 800.0,
-    customerName: "Creative Agency",
+    customer: "Creative Agency",
     date: "2024-02-05",
     status: "draft",
   },
@@ -75,7 +75,7 @@ class InvoiceService {
       filteredInvoices = filteredInvoices.filter(
         (invoice) =>
           invoice.title.toLowerCase().includes(searchTerm) ||
-          invoice.customerName.toLowerCase().includes(searchTerm),
+          invoice.customer.toLowerCase().includes(searchTerm),
       );
     }
 

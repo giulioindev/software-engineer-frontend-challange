@@ -1,12 +1,10 @@
 import { Container } from "@mui/material";
-import CssBaseline from "@mui/material/CssBaseline";
-import InitColorSchemeScript from "@mui/material/InitColorSchemeScript";
-import { ThemeProvider } from "@mui/material/styles";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v15-appRouter";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Roboto } from "next/font/google";
-import Navigation from "@/app/_components/navigation";
-import theme from "@/theme";
+import Navigation from "@/components/navigation";
+import StoreProvider from "@/components/store-provider";
+import ThemeProvider from "@/components/theme-provider";
 
 const roboto = Roboto({
   weight: ["300", "400", "500", "700"],
@@ -41,11 +39,9 @@ export default function RootLayout({
       className={`${roboto.variable} ${geistSans.variable} ${geistMono.variable}`}
       suppressHydrationWarning
     >
-      <body>
+      <body suppressHydrationWarning>
         <AppRouterCacheProvider>
-          <ThemeProvider theme={theme}>
-            <CssBaseline />
-            <InitColorSchemeScript attribute="class" />
+          <ThemeProvider>
             <main>
               <Navigation />
               <Container
@@ -55,7 +51,7 @@ export default function RootLayout({
                   px: { xs: 2, sm: 3, md: 3 },
                 }}
               >
-                {children}
+                <StoreProvider>{children}</StoreProvider>
               </Container>
             </main>
           </ThemeProvider>

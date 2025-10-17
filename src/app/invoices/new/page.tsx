@@ -2,9 +2,9 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import InvoiceForm from "@/app/invoices/_components/invoice-form";
+import InvoiceForm from "@/features/invoices/components/invoice-form";
+import type { CreateInvoiceData } from "@/features/invoices/types/invoice";
 import { invoiceService } from "@/services/invoiceService";
-import type { CreateInvoiceData } from "@/types/invoice";
 
 export default function NewInvoicePage() {
   const router = useRouter();

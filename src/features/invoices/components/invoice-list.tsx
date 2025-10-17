@@ -35,8 +35,12 @@ import {
 } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import type {
+  Invoice,
+  InvoiceFilters,
+  InvoiceStatus,
+} from "@/features/invoices/types/invoice";
 import { invoiceService } from "@/services/invoiceService";
-import type { Invoice, InvoiceFilters, InvoiceStatus } from "@/types/invoice";
 
 export default function InvoiceList() {
   const router = useRouter();

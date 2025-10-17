@@ -24,7 +24,7 @@ import type {
   Invoice,
   InvoiceStatus,
   UpdateInvoiceData,
-} from "@/types/invoice";
+} from "@/features/invoices/types/invoice";
 
 interface InvoiceFormProps {
   readonly invoice?: Invoice;

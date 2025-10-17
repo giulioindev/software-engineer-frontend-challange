@@ -1,5 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { invoiceApi } from "@/services/invoice";
+import { invoiceApi } from "@/features/invoices/invoice-service";
 
 export const makeStore = () => {
   return configureStore({
