@@ -1,6 +1,9 @@
 "use client";
 
-import { Alert, Box, CircularProgress, Grid, Typography } from "@mui/material";
+import Alert from "@mui/material/Alert";
+import Box from "@mui/material/Box";
+import Grid from "@mui/material/Grid";
+import Typography from "@mui/material/Typography";
 import Spinner from "@/components/spinner";
 import FinancialSummary from "@/features/dashboard/components/financial-summary";
 import Metrics from "@/features/dashboard/components/metrics";
