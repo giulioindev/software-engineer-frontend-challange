@@ -2,62 +2,35 @@
 
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import EditIcon from "@mui/icons-material/Edit";
-import {
-  Box,
-  Button,
-  Card,
-  CardContent,
-  Chip,
-  Divider,
-  Grid,
-  Paper,
-  Typography,
-} from "@mui/material";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import Chip from "@mui/material/Chip";
+import Divider from "@mui/material/Divider";
+import Grid from "@mui/material/Grid";
+import Paper from "@mui/material/Paper";
+import Typography from "@mui/material/Typography";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import type { Invoice } from "@/features/invoices/types/invoice";
+import { formatCurrency, formatDate, getStatusColor } from "@/utils";
 
 interface InvoiceDetailsProps {
   readonly invoice: Invoice;
-  readonly onBack: () => void;
-  readonly onEdit: (invoice: Invoice) => void;
 }
 
-export default function InvoiceDetails({
-  invoice,
-  onBack,
-  onEdit,
-}: InvoiceDetailsProps) {
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "paid":
-        return "success";
-      case "sent":
-        return "warning";
-      case "draft":
-        return "default";
-      default:
-        return "default";
-    }
-  };
-
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
-    }).format(amount);
-  };
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-  };
+export default function InvoiceDetails({ invoice }: InvoiceDetailsProps) {
+  const router = useRouter();
 
   return (
     <Box>
       <Box display="flex" alignItems="center" mb={3}>
-        <Button startIcon={<ArrowBackIcon />} onClick={onBack} sx={{ mr: 2 }}>
+        <Button
+          startIcon={<ArrowBackIcon />}
+          onClick={() => router.back()}
+          sx={{ mr: 2 }}
+        >
           Back to Invoices
         </Button>
         <Typography variant="h4" component="h1">
@@ -102,7 +75,7 @@ export default function InvoiceDetails({
                     Customer Name
                   </Typography>
                   <Typography variant="body1" gutterBottom>
-                    {invoice.customerName}
+                    {invoice.customer}
                   </Typography>
                 </Grid>
 
@@ -156,17 +129,16 @@ export default function InvoiceDetails({
               Quick Actions
             </Typography>
             <Box display="flex" flexDirection="column" gap={1}>
-              <Button
-                variant="contained"
-                startIcon={<EditIcon />}
-                onClick={() => onEdit(invoice)}
-                fullWidth
-              >
-                Edit Invoice
-              </Button>
-              <Button variant="outlined" onClick={onBack} fullWidth>
-                Back to List
-              </Button>
+              <Link href={`/invoices/${invoice.id}/edit`}>
+                <Button variant="contained" startIcon={<EditIcon />} fullWidth>
+                  Edit Invoice
+                </Button>
+              </Link>
+              <Link href={"/invoices"}>
+                <Button variant="outlined" fullWidth>
+                  Back to List
+                </Button>
+              </Link>
             </Box>
           </Paper>
 

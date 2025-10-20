@@ -1,80 +1,50 @@
 "use client";
 
-import { Alert, Box, CircularProgress } from "@mui/material";
-import { useRouter } from "next/navigation";
-import { use, useEffect, useState } from "react";
+import Alert from "@mui/material/Alert";
+import { useParams, useRouter } from "next/navigation";
+import Spinner from "@/components/spinner";
 import InvoiceForm from "@/features/invoices/components/invoice-form";
-import type {
-  Invoice,
-  UpdateInvoiceData,
-} from "@/features/invoices/types/invoice";
-import { invoiceService } from "@/services/invoiceService";
+import {
+  useGetInvoiceQuery,
+  useUpdateInvoiceMutation,
+} from "@/features/invoices/invoice-service";
+import type { InvoiceInput } from "@/features/invoices/types/invoice-input";
 
-interface EditInvoicePageProps {
-  params: Promise<{
-    id: string;
-  }>;
-}
-
-export default function EditInvoicePage({ params }: EditInvoicePageProps) {
+export default function EditInvoicePage() {
   const router = useRouter();
-  const [invoice, setInvoice] = useState<Invoice | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const { id } = use(params);
+  const { id } = useParams<{ id: string }>();
+  const {
+    data: invoice,
+    isLoading,
+    isError,
+  } = useGetInvoiceQuery(id, { refetchOnMountOrArgChange: false });
+  const [updateInvoice, { isLoading: isSaving }] = useUpdateInvoiceMutation();
 
-  useEffect(() => {
-    const loadInvoice = async () => {
-      try {
-        setLoading(true);
-        const data = await invoiceService.getInvoiceById(id);
-        setInvoice(data);
-      } catch (err) {
-        setError("Failed to load invoice");
-        console.error("Error loading invoice:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadInvoice();
-  }, [id]);
-
-  const handleSave = async (data: UpdateInvoiceData) => {
+  const handleSave = async (data: InvoiceInput) => {
     try {
-      setSaving(true);
-      await invoiceService.updateInvoice(id, data);
+      await updateInvoice({
+        id,
+        data,
+      }).unwrap();
       router.push(`/invoices/${id}`);
     } catch (error) {
       console.error("Error updating invoice:", error);
       throw error; // Let the form handle the error display
-    } finally {
-      setSaving(false);
     }
   };
 
   const handleCancel = () => {
-    router.push(`/invoices/${id}`);
+    router.back();
   };
 
-  if (loading) {
-    return (
-      <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        minHeight="400px"
-      >
-        <CircularProgress />
-      </Box>
-    );
+  if (isLoading) {
+    return <Spinner />;
   }
 
-  if (error || !invoice) {
+  if (isError || !invoice) {
     return (
       <Alert severity="error" sx={{ mb: 3 }}>
-        {error || "Invoice not found"}
+        {"Invoice not found"}
       </Alert>
     );
   }
@@ -84,7 +54,7 @@ export default function EditInvoicePage({ params }: EditInvoicePageProps) {
       invoice={invoice}
       onSave={handleSave}
       onCancel={handleCancel}
-      loading={saving}
+      loading={isSaving}
     />
   );
 }

@@ -1,74 +1,27 @@
 "use client";
 
-import { Alert, Box, CircularProgress } from "@mui/material";
-import { useRouter } from "next/navigation";
-import { use, useEffect, useState } from "react";
+import Alert from "@mui/material/Alert";
+
+import { useParams } from "next/navigation";
+import Spinner from "@/components/spinner";
 import InvoiceDetails from "@/features/invoices/components/invoice-details";
-import type { Invoice } from "@/features/invoices/types/invoice";
-import { invoiceService } from "@/services/invoiceService";
+import { useGetInvoiceQuery } from "@/features/invoices/invoice-service";
 
-interface InvoiceDetailsPageProps {
-  params: Promise<{
-    id: string;
-  }>;
-}
+export default function InvoiceDetailsPage() {
+  const { id } = useParams<{ id: string }>();
+  const { data: invoice, isLoading, isError } = useGetInvoiceQuery(id);
 
-export default function InvoiceDetailsPage({
-  params,
-}: InvoiceDetailsPageProps) {
-  const router = useRouter();
-  const [invoice, setInvoice] = useState<Invoice | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const { id } = use(params);
-
-  useEffect(() => {
-    const loadInvoice = async () => {
-      try {
-        setLoading(true);
-        const data = await invoiceService.getInvoiceById(id);
-        setInvoice(data);
-      } catch (err) {
-        setError("Failed to load invoice");
-        console.error("Error loading invoice:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadInvoice();
-  }, [id]);
-
-  const handleBack = () => {
-    router.push("/invoices");
-  };
-
-  const handleEdit = (invoice: Invoice) => {
-    router.push(`/invoices/${invoice.id}/edit`);
-  };
-
-  if (loading) {
-    return (
-      <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        minHeight="400px"
-      >
-        <CircularProgress />
-      </Box>
-    );
+  if (isLoading) {
+    return <Spinner />;
   }
 
-  if (error || !invoice) {
+  if (isError || !invoice) {
     return (
       <Alert severity="error" sx={{ mb: 3 }}>
-        {error || "Invoice not found"}
+        Invoice not found
       </Alert>
     );
   }
-
-  return (
-    <InvoiceDetails invoice={invoice} onBack={handleBack} onEdit={handleEdit} />
-  );
+  // NOTE: workaround for mockoon wrong behavior
+  return <InvoiceDetails invoice={{ ...invoice, id }} />;
 }

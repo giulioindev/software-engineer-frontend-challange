@@ -13,8 +13,10 @@ import {
   useDeleteInvoiceMutation,
   useGetInvoicesQuery,
 } from "@/features/invoices/invoice-service";
-import type { Invoice, InvoiceStatus } from "@/features/invoices/types/invoice";
+import type { Invoice } from "@/features/invoices/types/invoice";
 import type { InvoiceFilters } from "@/features/invoices/types/invoice-filters";
+import type { InvoiceStatus } from "@/features/invoices/types/invoice-status";
+
 export default function InvoicesPage() {
   const router = useRouter();
   const [page, setPage] = useState(0);

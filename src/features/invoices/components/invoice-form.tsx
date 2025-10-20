@@ -2,35 +2,28 @@
 
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import SaveIcon from "@mui/icons-material/Save";
-import {
-  Alert,
-  Box,
-  Button,
-  Card,
-  CardContent,
-  CircularProgress,
-  FormControl,
-  Grid,
-  InputLabel,
-  MenuItem,
-  Select,
-  TextField,
-  Typography,
-} from "@mui/material";
+import Alert from "@mui/material/Alert";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import CircularProgress from "@mui/material/CircularProgress";
+import FormControl from "@mui/material/FormControl";
+import Grid from "@mui/material/Grid";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import Select from "@mui/material/Select";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
 import type React from "react";
 import { useEffect, useState } from "react";
-import type {
-  CreateInvoiceData,
-  Invoice,
-  InvoiceStatus,
-  UpdateInvoiceData,
-} from "@/features/invoices/types/invoice";
+import type { Invoice } from "@/features/invoices/types/invoice";
+import type { InvoiceInput } from "@/features/invoices/types/invoice-input";
+import type { InvoiceStatus } from "@/features/invoices/types/invoice-status";
 
 interface InvoiceFormProps {
   readonly invoice?: Invoice;
-  readonly onSave: (
-    data: CreateInvoiceData | UpdateInvoiceData,
-  ) => Promise<void>;
+  readonly onSave: (data: InvoiceInput) => Promise<void>;
   readonly onCancel: () => void;
   readonly loading?: boolean;
 }
@@ -44,7 +37,7 @@ export default function InvoiceForm({
   const [formData, setFormData] = useState({
     title: "",
     amount: "",
-    customerName: "",
+    customer: "",
     status: "draft" as InvoiceStatus,
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -57,7 +50,7 @@ export default function InvoiceForm({
       setFormData({
         title: invoice.title,
         amount: invoice.amount.toString(),
-        customerName: invoice.customerName,
+        customer: invoice.customer,
         status: invoice.status,
       });
     }
@@ -70,15 +63,15 @@ export default function InvoiceForm({
       newErrors.title = "Title is required";
     }
 
-    if (!formData.customerName.trim()) {
-      newErrors.customerName = "Customer name is required";
+    if (!formData.customer.trim()) {
+      newErrors.customer = "Customer name is required";
     }
 
     if (!formData.amount.trim()) {
       newErrors.amount = "Amount is required";
     } else {
-      const amount = parseFloat(formData.amount);
-      if (isNaN(amount) || amount <= 0) {
+      const amount = Number.parseFloat(formData.amount);
+      if (Number.isNaN(amount) || amount <= 0) {
         newErrors.amount = "Amount must be a positive number";
       }
     }
@@ -89,21 +82,18 @@ export default function InvoiceForm({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     if (!validateForm()) {
       return;
     }
-
     try {
       setSubmitError(null);
       const submitData = {
         title: formData.title.trim(),
-        customerName: formData.customerName.trim(),
-        amount: parseFloat(formData.amount),
-        ...(isEdit && { status: formData.status }),
+        customer: formData.customer.trim(),
+        amount: Number.parseFloat(formData.amount),
+        status: formData.status,
       };
-
-      await onSave(submitData);
+      await onSave(submitData as InvoiceInput);
     } catch (error) {
       setSubmitError("Failed to save invoice. Please try again.");
       console.error("Error saving invoice:", error);
@@ -114,14 +104,16 @@ export default function InvoiceForm({
     (field: string) =>
     (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
       setFormData((prev) => ({ ...prev, [field]: e.target.value }));
-      // Clear error when user starts typing
       if (errors[field]) {
         setErrors((prev) => ({ ...prev, [field]: "" }));
       }
     };
 
   const handleStatusChange = (e: any) => {
-    setFormData((prev) => ({ ...prev, status: e.target.value }));
+    setFormData((formData) => ({
+      ...formData,
+      status: e.target.value as InvoiceStatus,
+    }));
   };
 
   return (
@@ -166,10 +158,10 @@ export default function InvoiceForm({
                 <TextField
                   fullWidth
                   label="Customer Name"
-                  value={formData.customerName}
-                  onChange={handleInputChange("customerName")}
-                  error={!!errors.customerName}
-                  helperText={errors.customerName}
+                  value={formData.customer}
+                  onChange={handleInputChange("customer")}
+                  error={!!errors.customer}
+                  helperText={errors.customer}
                   disabled={loading}
                   required
                 />
@@ -189,24 +181,21 @@ export default function InvoiceForm({
                   slotProps={{ htmlInput: { min: 0, step: 0.01 } }}
                 />
               </Grid>
-
-              {isEdit && (
-                <Grid size={{ xs: 12, sm: 6 }}>
-                  <FormControl fullWidth>
-                    <InputLabel>Status</InputLabel>
-                    <Select
-                      value={formData.status}
-                      label="Status"
-                      onChange={handleStatusChange}
-                      disabled={loading}
-                    >
-                      <MenuItem value="draft">Draft</MenuItem>
-                      <MenuItem value="sent">Sent</MenuItem>
-                      <MenuItem value="paid">Paid</MenuItem>
-                    </Select>
-                  </FormControl>
-                </Grid>
-              )}
+              <Grid size={{ xs: 12, sm: 6 }}>
+                <FormControl fullWidth>
+                  <InputLabel>Status</InputLabel>
+                  <Select
+                    value={formData.status}
+                    label="Status"
+                    onChange={handleStatusChange}
+                    disabled={loading}
+                  >
+                    <MenuItem value="draft">Draft</MenuItem>
+                    <MenuItem value="sent">Sent</MenuItem>
+                    <MenuItem value="paid">Paid</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
 
               <Grid size={{ xs: 12 }}>
                 <Box display="flex" gap={2} justifyContent="flex-end">

@@ -1,33 +1,6 @@
-export type InvoiceStatus = "draft" | "sent" | "paid";
+import type { InvoiceInput } from "@/features/invoices/types/invoice-input";
 
-export interface Invoice {
+export interface Invoice extends InvoiceInput {
   id: string;
-  title: string;
-  amount: number;
-  customer: string;
   date: string;
-  status: InvoiceStatus;
-}
-
-export interface CreateInvoiceData {
-  title: string;
-  amount: number;
-  customerName: string;
-}
-
-export interface UpdateInvoiceData {
-  title?: string;
-  amount?: number;
-  customer?: string;
-  status?: InvoiceStatus;
-}
-
-export interface InvoiceFilters {
-  status?: InvoiceStatus;
-  search?: string;
-}
-
-export interface PaginationParams {
-  page: number;
-  limit: number;
 }
