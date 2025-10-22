@@ -33,6 +33,7 @@ const axiosBaseQuery =
         method,
         data,
         params,
+        timeout: 10000,
       });
       return { data: result.data };
     } catch (axiosError) {
