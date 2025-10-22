@@ -15,32 +15,38 @@ import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
+import { useEffect } from "react";
 import { useInvoiceForm } from "@/features/invoices/hooks/use-invoice-form";
 import type { Invoice } from "@/features/invoices/types/invoice";
-import type { InvoiceInput } from "@/features/invoices/types/invoice-input";
 
 interface InvoiceFormProps {
   readonly invoice?: Invoice;
-  readonly onSave: (data: InvoiceInput) => Promise<void>;
+  readonly onSave: () => void;
   readonly onCancel: () => void;
-  readonly loading?: boolean;
 }
 
 export default function InvoiceForm({
   invoice,
   onSave,
   onCancel,
-  loading = false,
 }: Readonly<InvoiceFormProps>) {
   const {
     formData,
-    errors,
+    validationErrors,
+    isSubmitting,
+    isSuccess,
     submitError,
     handleSubmit,
     handleInputChange,
     setSubmitError,
-  } = useInvoiceForm({ invoice, onSave });
+  } = useInvoiceForm({ invoice });
   const isEdit = !!invoice;
+
+  useEffect(() => {
+    if (isSuccess) {
+      onSave();
+    }
+  }, [isSuccess, onSave]);
 
   return (
     <Box>
@@ -73,9 +79,9 @@ export default function InvoiceForm({
                   label="Invoice Title"
                   value={formData.title}
                   onChange={handleInputChange("title")}
-                  error={!!errors.title}
-                  helperText={errors.title}
-                  disabled={loading}
+                  error={!!validationErrors.title}
+                  helperText={validationErrors.title}
+                  disabled={isSubmitting}
                 />
               </Grid>
               <Grid size={{ xs: 12, sm: 6 }}>
@@ -84,9 +90,9 @@ export default function InvoiceForm({
                   label="Customer Name"
                   value={formData.customer}
                   onChange={handleInputChange("customer")}
-                  error={!!errors.customer}
-                  helperText={errors.customer}
-                  disabled={loading}
+                  error={!!validationErrors.customer}
+                  helperText={validationErrors.customer}
+                  disabled={isSubmitting}
                 />
               </Grid>
               <Grid size={{ xs: 12, sm: 6 }}>
@@ -96,9 +102,9 @@ export default function InvoiceForm({
                   type="number"
                   value={formData.amount}
                   onChange={handleInputChange("amount")}
-                  error={!!errors.amount}
-                  helperText={errors.amount}
-                  disabled={loading}
+                  error={!!validationErrors.amount}
+                  helperText={validationErrors.amount}
+                  disabled={isSubmitting}
                   slotProps={{ htmlInput: { step: 0.01 } }}
                 />
               </Grid>
@@ -109,7 +115,7 @@ export default function InvoiceForm({
                     value={formData.status}
                     label="Status"
                     onChange={handleInputChange("status")}
-                    disabled={loading}
+                    disabled={isSubmitting}
                   >
                     <MenuItem value="draft">Draft</MenuItem>
                     <MenuItem value="sent">Sent</MenuItem>
@@ -122,7 +128,7 @@ export default function InvoiceForm({
                   <Button
                     variant="outlined"
                     onClick={onCancel}
-                    disabled={loading}
+                    disabled={isSubmitting}
                   >
                     Cancel
                   </Button>
@@ -130,12 +136,16 @@ export default function InvoiceForm({
                     type="submit"
                     variant="contained"
                     startIcon={
-                      loading ? <CircularProgress size={20} /> : <SaveIcon />
+                      isSubmitting ? (
+                        <CircularProgress size={20} />
+                      ) : (
+                        <SaveIcon />
+                      )
                     }
-                    disabled={loading}
+                    disabled={isSubmitting}
                   >
                     {(() => {
-                      if (loading) return "Saving...";
+                      if (isSubmitting) return "Saving...";
                       return isEdit ? "Update Invoice" : "Create Invoice";
                     })()}
                   </Button>
